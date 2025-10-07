@@ -1,12 +1,32 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net' }
+        jcenter()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3'
+    }
 }
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'java'
+apply plugin: 'idea'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = 'optimize.optimizemod'
 version = '1.0.0'
+group = 'optimize.optimizemod'
+archivesBaseName = 'optimize-mod'
+
+minecraft {
+    version = '1.12.2-14.23.5.2860'
+    mappings = 'stable_39'
+    runDir = 'run'
+    makeObfSourceJar = false
+}
 
 repositories {
     mavenLocal()
@@ -15,7 +35,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
     implementation 'org.apache.logging.log4j:log4j-api:2.8.1'
 }
 
@@ -30,10 +50,16 @@ sourceSets {
     }
 }
 
+processResources {
+    inputs.property 'version', project.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    // Include the legacy compiled classes on the compilation classpath so that
-    // the new sources can reference them if needed.
     classpath += files('src/main/resources')
 }
 
