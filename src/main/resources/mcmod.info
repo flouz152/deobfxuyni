@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "optimizemod",
+    "name": "Optimize Mod",
+    "description": "Repackaged legacy client with HWID checks removed.",
+    "version": "1.0.0",
+    "mcversion": "1.12.2",
+    "url": "",
+    "authorList": ["Unknown"],
+    "credits": "Legacy client authors",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+group = 'optimize.optimizemod'
+version = '1.0.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url = 'https://maven.minecraftforge.net' }
+}
+
+dependencies {
+    compileOnly 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // Include the legacy compiled classes on the compilation classpath so that
+    // the new sources can reference them if needed.
+    classpath += files('src/main/resources')
+}
+
+jar {
+    from('src/main/resources') {
+        include '**/*.class'
+    }
+    manifest {
+        attributes(
+                'Implementation-Title': 'Optimize Mod',
+                'Implementation-Version': project.version
+        )
+    }
+}
