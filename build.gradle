@@ -12,12 +12,16 @@ buildscript {
     }
 }
 
-SourceSet.metaClass.getCompileConfigurationName = {
-    delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'compile' : "${delegate.name}Compile"
+if (!SourceSet.metaClass.respondsTo(SourceSet, 'getCompileConfigurationName')) {
+    SourceSet.metaClass.getCompileConfigurationName = {
+        delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'compile' : "${delegate.name}Compile"
+    }
 }
 
-SourceSet.metaClass.getRuntimeConfigurationName = {
-    delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'runtime' : "${delegate.name}Runtime"
+if (!SourceSet.metaClass.respondsTo(SourceSet, 'getRuntimeConfigurationName')) {
+    SourceSet.metaClass.getRuntimeConfigurationName = {
+        delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'runtime' : "${delegate.name}Runtime"
+    }
 }
 
 apply plugin: 'java'

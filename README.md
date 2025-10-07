@@ -9,6 +9,9 @@ are bundled directly into the output jar. Two small Java sources are provided:
   a constant identifier, effectively removing the login lock while keeping the
   rest of the client stable.
 
-To build the mod you can use Gradle (ForgeGradle 2.3 compatible). The repository
-uses the standard Java plugin so running `./gradlew build` will create a jar
-containing the legacy classes alongside the new entrypoints.
+To build the mod you can use Gradle (ForgeGradle 2.3 compatible). The project is
+configured for Gradle **6.8.1**, which still exposes the legacy `compile`/
+`runtime` configurations required by ForgeGradle 2.3. Running `gradle wrapper
+--gradle-version 6.8.1 --distribution-type all` in the project directory will
+generate the wrapper so `./gradlew build` produces a jar containing the legacy
+classes alongside the new entrypoints.
