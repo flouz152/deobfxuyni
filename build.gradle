@@ -1,0 +1,96 @@
+import org.gradle.api.tasks.SourceSet
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+if (!SourceSet.metaClass.respondsTo(SourceSet, 'getCompileConfigurationName')) {
+    SourceSet.metaClass.getCompileConfigurationName = {
+        delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'compile' : "${delegate.name}Compile"
+    }
+}
+
+if (!SourceSet.metaClass.respondsTo(SourceSet, 'getRuntimeConfigurationName')) {
+    SourceSet.metaClass.getRuntimeConfigurationName = {
+        delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'runtime' : "${delegate.name}Runtime"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+configurations.maybeCreate('compile')
+configurations.maybeCreate('runtime')
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+configurations.compile.extendsFrom configurations.implementation
+configurations.runtime.extendsFrom configurations.runtimeOnly
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+version = '1.0.0'
+group = 'optimize.optimizemod'
+archivesBaseName = 'optimize-mod'
+
+minecraft {
+    version = '1.12.2-14.23.5.2860'
+    mappings = 'stable_39'
+    runDir = 'run'
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url = 'https://maven.minecraftforge.net/' }
+}
+
+dependencies {
+    compile 'org.apache.logging.log4j:log4j-api:2.8.1'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    classpath += files('src/main/resources')
+}
+
+jar {
+    from('src/main/resources') {
+        include '**/*.class'
+    }
+    manifest {
+        attributes(
+                'Implementation-Title': 'Optimize Mod',
+                'Implementation-Version': project.version
+        )
+    }
+}
