@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.SourceSet
+
 buildscript {
     repositories {
         mavenLocal()
@@ -8,6 +10,14 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
+}
+
+SourceSet.metaClass.getCompileConfigurationName = {
+    delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'compile' : "${delegate.name}Compile"
+}
+
+SourceSet.metaClass.getRuntimeConfigurationName = {
+    delegate.name == SourceSet.MAIN_SOURCE_SET_NAME ? 'runtime' : "${delegate.name}Runtime"
 }
 
 apply plugin: 'java'
