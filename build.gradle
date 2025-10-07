@@ -10,9 +10,16 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'java'
 apply plugin: 'idea'
+
+configurations.maybeCreate('compile')
+configurations.maybeCreate('runtime')
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+configurations.compile.extendsFrom configurations.implementation
+configurations.runtime.extendsFrom configurations.runtimeOnly
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
